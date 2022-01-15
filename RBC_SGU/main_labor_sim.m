@@ -19,7 +19,7 @@ addpath([thispath_,'\auxfiles\'] )
 
 % - set parameters
 zetaparval = 0;
-Aparval = 1.0943; % not given
+Aparval = 1.0576;1.05;1.0943; % not given Should implement root finding method here!!!
 rhoparval = 0.95;
 betaparval = 0.997;
 thetaparval = 0.0265;
@@ -40,12 +40,11 @@ Upsilonbar = xbar - wbar;
 Jbar = Upsilonbar/(1-(1-thetaparval)*betaparval);
 stoch_betabar = betaparval;
 qbar = kappaparval/(stoch_betabar*Jbar);
-fbar = (chiparval*qbar^(xiparval))^(1/(1+xiparval));
+fbar = (chiparval*qbar^(xiparval-1))^(1/xiparval); %fbar = (chiparval*qbar^(xiparval))^(1/(1+xiparval));
 ebar = fbar/(fbar+thetaparval);
 ubar = 1 - ebar;
 mbar = fbar*ubar;
-vbar = mbar/qbar;
-
+vbar = (mbar/(chiparval*ubar^xiparval))^(1/(1-xiparval));
 lbar = ebar;
 ybar = Abar*lbar;
 cbar = ybar-kappaparval*vbar;
@@ -53,8 +52,8 @@ lambdabar = 1/cbar;
 Psibar = Upsilonbar*ebar-kappaparval*vbar;
 
 % check
-% mbar - chiparval*ubar^xiparval*vbar^xiparval
-% 
+% mbar - chiparval*ubar^xiparval*vbar^(1-xiparval)
+% % vbar = mbar/qbar;
 % cbar-ebar*wbar - Psibar
 
 xstst = [ebar, Abar];
