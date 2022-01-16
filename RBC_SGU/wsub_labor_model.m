@@ -17,7 +17,7 @@ syms ctp etp wtp Psitp lambdatp stoch_betatp ytp Atp ltp xtp utp ftp Upsilontp J
 % -----------------------------------
 jkl      = 0;
 % - budget constraint
-jkl      = jkl+1; f(jkl,1) = ct - et*wt - Psit;
+jkl      = jkl+1; f(jkl,1) = ct - et*wt*(1-taut) - Psit;
 % - marginal utility of consumption
 jkl      = jkl+1; f(jkl,1) = lambdat - 1/ct;
 % - labor demand
@@ -35,7 +35,7 @@ jkl      = jkl+1; f(jkl,1) = etp - (1-nupar)*et - ft*ut;
 % - labor firm profit
 jkl      = jkl+1; f(jkl,1) = Upsilont - xt + w_firmt;
 % - value
-jkl      = jkl+1; f(jkl,1) = Jt - Upsilont - (1-nupar)*stoch_betat*Jtp;
+jkl      = jkl+1; f(jkl,1) = Jt - (Apar - etapar*Apar-(1-etapar)*pipar)/(1-(1-nupar)*betapar);
 % - wage equation
 jkl      = jkl+1; f(jkl,1) = wt - etapar*xt - (1-etapar)*pipar;
 % - match
@@ -51,7 +51,7 @@ jkl      = jkl+1; f(jkl,1) = stoch_betat - betapar*lambdatp/lambdat;
 % - firm profit
 jkl      = jkl+1; f(jkl,1) = Psit - Upsilont*et + kappapar*vt;
 % - subsidy
-jkl      = jkl+1; f(jkl,1) = taut - (wt - (etaparval*Aparval+(1-etaparval)*piparval) - (xt-Aparval))/wt;
+jkl      = jkl+1; f(jkl,1) = taut - (wt - (etapar*Apar+(1-etapar)*pipar) - (xt-Apar))/wt;
 % - wage of firm
 jkl      = jkl+1; f(jkl,1) = w_firmt - wt*(1-taut);
 % - subsidy
