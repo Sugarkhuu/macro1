@@ -142,7 +142,7 @@ YXsimul = YXsimul(:, nburn+1:end);
 YXfilter = yd*100;
 
 % - std deviations
-ypos = 6;
+ypos = find(strcmp(cellstr(yx_),'ytp'));6;
 VCOV = cov(YXfilter);
 stds = sqrt(diag(VCOV));                % standard deviations
 CORR = corr(YXfilter);
