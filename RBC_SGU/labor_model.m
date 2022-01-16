@@ -8,7 +8,7 @@
 % -----------------------------------
 % define symbolic variables
 % -----------------------------------
-syms zetapar Apar rhopar betapar thetapar etapar pipar xipar chipar kappapar sigmaApar;         % parameters
+syms zetapar Apar rhopar betapar nupar etapar pipar xipar chipar kappapar sigmaApar;            % parameters
 syms ct et wt Psit lambdat stoch_betat yt At lt xt ut ft Upsilont Jt vt mt qt;                  % variables: today 
 syms ctp etp wtp Psitp lambdatp stoch_betatp ytp Atp ltp xtp utp ftp Upsilontp Jtp vtp mtp qtp; % variables: tomorrow 
 
@@ -26,33 +26,32 @@ jkl      = jkl+1; f(jkl,1) = yt - At*lt;
 jkl      = jkl+1; f(jkl,1) = Atp - Apar - rhopar*(At - Apar);
 % - labor good production
 jkl      = jkl+1; f(jkl,1) = lt - yt/xt;
-% - labor market 
+% - labor market clearing
 jkl      = jkl+1; f(jkl,1) = lt - et;
 % - unemployment
 jkl      = jkl+1; f(jkl,1) = et - 1 + ut;
 % - employment dynamic
-jkl      = jkl+1; f(jkl,1) = etp - (1-thetapar)*et - ft*ut;
+jkl      = jkl+1; f(jkl,1) = etp - (1-nupar)*et - ft*ut;
 % - labor firm profit
 jkl      = jkl+1; f(jkl,1) = Upsilont - xt + wt;
 % - labor firm profit
-jkl      = jkl+1; f(jkl,1) = Jt - Upsilont - (1-thetapar)*stoch_betat*Jtp;
+jkl      = jkl+1; f(jkl,1) = Jt - Upsilont - (1-nupar)*stoch_betat*Jtp;
 % - wage equation
 jkl      = jkl+1; f(jkl,1) = wt - etapar*xt - (1-etapar)*pipar;
 % - match
 jkl      = jkl+1; f(jkl,1) = mt - chipar*(ut^xipar)*(vt^(1-xipar));
-% - vacancy fill
+% - vacancy fill prob.
 jkl      = jkl+1; f(jkl,1) = qt - mt/vt;
-% - get employed
+% - get employed prob.
 jkl      = jkl+1; f(jkl,1) = ft - mt/ut;
-% - get employed
+% - search profit zero cond.
 jkl      = jkl+1; f(jkl,1) = kappapar - qt*stoch_betat*Jtp;
 % - stoch_betat
 jkl      = jkl+1; f(jkl,1) = stoch_betat - betapar*lambdatp/lambdat;
-% - stoch_betat
+% - firm profit
 jkl      = jkl+1; f(jkl,1) = Psit - Upsilont*et + kappapar*vt;
 
-% double counting
-% % - output market clearing
+% - output market clearing - double counting
 % jkl      = jkl+1; f(jkl,1) = yt - ct + kapppar*vt;
 
 % -----------------------------------
@@ -67,7 +66,7 @@ yp = [ctp wtp Psitp lambdatp stoch_betatp ytp ltp xtp utp ftp Upsilontp Jtp vtp 
 x_ = strvcat('et','At');
 y_ = strvcat('ctp', 'wtp', 'Psitp', 'lambdatp', 'stoch_betatp', 'ytp', 'ltp', 'xtp', 'utp', 'ftp', 'Upsilontp', 'Jtp', 'vtp', 'mtp', 'qtp');
 
-paramsym = [zetapar Apar rhopar betapar thetapar etapar pipar xipar chipar kappapar sigmaApar]; % parameters
+paramsym = [zetapar Apar rhopar betapar nupar etapar pipar xipar chipar kappapar sigmaApar]; % parameters
 
 nx = length(x);
 ny = length(y);

@@ -18,17 +18,17 @@ addpath([thispath_,'\auxfiles\'] )
 % -----------------------------------------
 
 % - set parameters
-zetaparval = 0;
-Aparval = 1.0576;1.05;1.0943; % not given Should implement root finding method here!!!
-rhoparval = 0.95;
-betaparval = 0.997;
-thetaparval = 0.0265;
-etaparval = 0.4;
-piparval = 1.02; 
-xiparval = 0.5; 
-chiparval = 0.38; 
-kappaparval = 0.24;
+zetaparval   = 0;
+rhoparval    = 0.95;
+betaparval   = 0.997;
+nuparval     = 0.0265;
+etaparval    = 0.4;
+piparval     = 1.02; 
+xiparval     = 0.5; 
+chiparval    = 0.38; 
+kappaparval  = 0.24;
 sigmaAparval = 0.5/100;
+Aparval      = 1.0576; % not given Should implement root finding method here!!!
 
 % ----------------------------
 % Section 2. Compute steady state and implied params
@@ -37,11 +37,11 @@ Abar = Aparval;
 xbar = Abar;
 wbar = etaparval*xbar + (1-etaparval)*piparval;
 Upsilonbar = xbar - wbar;
-Jbar = Upsilonbar/(1-(1-thetaparval)*betaparval);
+Jbar = Upsilonbar/(1-(1-nuparval)*betaparval);
 stoch_betabar = betaparval;
 qbar = kappaparval/(stoch_betabar*Jbar);
-fbar = (chiparval*qbar^(xiparval-1))^(1/xiparval); %fbar = (chiparval*qbar^(xiparval))^(1/(1+xiparval));
-ebar = fbar/(fbar+thetaparval);
+fbar = (chiparval*qbar^(xiparval-1))^(1/xiparval); 
+ebar = fbar/(fbar+nuparval);
 ubar = 1 - ebar;
 mbar = fbar*ubar;
 vbar = (mbar/(chiparval*ubar^xiparval))^(1/(1-xiparval));
@@ -51,14 +51,14 @@ cbar = ybar-kappaparval*vbar;
 lambdabar = 1/cbar;
 Psibar = Upsilonbar*ebar-kappaparval*vbar;
 
-% check
+%% checks
 % mbar - chiparval*ubar^xiparval*vbar^(1-xiparval)
 % % vbar = mbar/qbar;
 % cbar-ebar*wbar - Psibar
 
 xstst = [ebar, Abar];
 ystst = [cbar, wbar, Psibar, lambdabar, stoch_betabar, ybar, lbar, xbar, ubar, fbar, Upsilonbar, Jbar, vbar, mbar, qbar];
-paramvals = [zetaparval Aparval rhoparval betaparval thetaparval etaparval piparval xiparval chiparval kappaparval sigmaAparval];
+paramvals = [zetaparval Aparval rhoparval betaparval nuparval etaparval piparval xiparval chiparval kappaparval sigmaAparval];
 
 % --------------------------
 % Section 2. run model file and get derivatives
@@ -88,8 +88,8 @@ nfyp = eval(subs(fyp,[x,xp,y,yp,paramsym],[xstst,xstst,ystst,ystst, paramvals]))
 tperiods = 25;
 IRF      = zeros(ny+nx,tperiods);
 
-%x        = [0; sigmaaparval];  % one standard deviation shock
-x        = [0; 0.01];           % one percent shock
+x        = [0; sigmaAparval];  % one standard deviation shock
+% x        = [0; 0.01];           % one percent shock
 
 for t = 1:tperiods
     IRF(:,t) = [gx*x; x];
@@ -100,15 +100,15 @@ end
 yxst = [ystst,xstst]';
 yx_  = strvcat(y_,x_);
 
-nrow = 3; 
-ncol = 3;
+nrow = 4; 
+ncol = 5;
 
 figure(1)
 for jkl=1:(nx+ny);
     subplot(nrow,ncol,jkl)
     scalepar = yxst(jkl);
     plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
-    title(yx_(jkl,:))
+    title(yx_(jkl,:), 'Interpreter','None')
     ylabel('percent')
     xlabel('quarters')
     axis tight
@@ -126,7 +126,7 @@ nburn  = 1000;
 Inno = randn(1,nsimul+nburn);
 x    = zeros(nx,1); 
 YXsimul = zeros(ny+nx, nsimul+nburn);
-eta = [0; sigmaaparval];
+eta = [0; sigmaAparval];
 
 for jkl = 1:(nsimul+nburn);
     x = hx*x+eta*Inno(1,jkl);
