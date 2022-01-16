@@ -50,6 +50,9 @@ ybar = Abar*lbar;
 cbar = ybar-kappaparval*vbar;
 lambdabar = 1/cbar;
 Psibar = Upsilonbar*ebar-kappaparval*vbar;
+w_firmbar = wbar;
+taubar = wbar/w_firmbar-1;
+substbar = wbar - w_firmbar;
 
 %% checks
 % mbar - chiparval*ubar^xiparval*vbar^(1-xiparval)
@@ -57,13 +60,13 @@ Psibar = Upsilonbar*ebar-kappaparval*vbar;
 % cbar-ebar*wbar - Psibar
 
 xstst = [ebar, Abar];
-ystst = [cbar, wbar, Psibar, lambdabar, stoch_betabar, ybar, lbar, xbar, ubar, fbar, Upsilonbar, Jbar, vbar, mbar, qbar];
+ystst = [cbar, wbar, Psibar, lambdabar, stoch_betabar, ybar, lbar, xbar, ubar, fbar, Upsilonbar, Jbar, vbar, mbar, qbar, taubar,w_firmbar, substbar];
 paramvals = [zetaparval Aparval rhoparval betaparval nuparval etaparval piparval xiparval chiparval kappaparval sigmaAparval];
 
 % --------------------------
 % Section 2. run model file and get derivatives
 % --------------------------
-labor_model;
+wsub_labor_model;
 
 % --------------------------
 % Section 3. Check steady state, and evaluate derivatives at steady state

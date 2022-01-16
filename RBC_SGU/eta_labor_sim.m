@@ -22,13 +22,13 @@ zetaparval   = 0;
 rhoparval    = 0.95;
 betaparval   = 0.997;
 nuparval     = 0.0265;
-etaparval    = 0.4;
-piparval     = 1.02; 
 xiparval     = 0.5; 
 chiparval    = 0.38; 
 kappaparval  = 0.24;
 sigmaAparval = 0.5/100;
 Aparval      = 1.0576; % not given Should implement root finding method here!!!
+etaparval    = 0.2;
+piparval     = (1.0350-etaparval*Aparval)/(1-etaparval); % 1.0293
 
 % ----------------------------
 % Section 2. Compute steady state and implied params
