@@ -9,17 +9,15 @@
 % define symbolic variables
 % -----------------------------------
 syms zetapar Apar rhopar betapar nupar etapar pipar xipar chipar kappapar sigmaApar;            % parameters
-syms ct et wt Psit lambdat stoch_betat yt At lt xt ut ft Upsilont Jt vt mt qt w_firmt;                  % variables: today 
-syms ctp etp wtp Psitp lambdatp stoch_betatp ytp Atp ltp xtp utp ftp Upsilontp Jtp vtp mtp qtp w_firmtp; % variables: tomorrow 
-syms taut;
-syms tautp;
+syms ct et wt Psit lambdat stoch_betat yt At lt xt ut ft Upsilont Jt vt mt qt;                  % variables: today 
+syms ctp etp wtp Psitp lambdatp stoch_betatp ytp Atp ltp xtp utp ftp Upsilontp Jtp vtp mtp qtp; % variables: tomorrow 
 
 % -----------------------------------
 % model equations; create function f
 % -----------------------------------
 jkl      = 0;
 % - budget constraint
-jkl      = jkl+1; f(jkl,1) = ct - et*wt - Psit; % consumers pay taxes for the wage subsidy
+jkl      = jkl+1; f(jkl,1) = ct - et*wt - Psit;
 % - marginal utility of consumption
 jkl      = jkl+1; f(jkl,1) = lambdat - 1/ct;
 % - output
@@ -35,7 +33,7 @@ jkl      = jkl+1; f(jkl,1) = et - 1 + ut;
 % - employment dynamic
 jkl      = jkl+1; f(jkl,1) = etp - (1-nupar)*et - ft*ut;
 % - labor firm profit
-jkl      = jkl+1; f(jkl,1) = Upsilont - xt + wt*(1-taut);
+jkl      = jkl+1; f(jkl,1) = Upsilont - xt + wt;
 % - labor firm value
 jkl      = jkl+1; f(jkl,1) = Jt - Upsilont - (1-nupar)*stoch_betat*Jtp;
 % - wage equation
@@ -46,29 +44,27 @@ jkl      = jkl+1; f(jkl,1) = mt - chipar*(ut^xipar)*(vt^(1-xipar));
 jkl      = jkl+1; f(jkl,1) = qt - mt/vt;
 % - get employed prob.
 jkl      = jkl+1; f(jkl,1) = ft - mt/ut;
-% - firm zero profit cond.
+% - firm zero profit  cond.
 jkl      = jkl+1; f(jkl,1) = kappapar - qt*stoch_betat*Jtp;
 % - stoch_betat
 jkl      = jkl+1; f(jkl,1) = stoch_betat - betapar*lambdatp/lambdat;
 % - firm profit
 jkl      = jkl+1; f(jkl,1) = Psit - Upsilont*et + kappapar*vt;
-% - fixed unemployment
-jkl      = jkl+1; f(jkl,1) = ut - utp;
-% - firm wage
-jkl      = jkl+1; f(jkl,1) = w_firmt - wt*(1-taut);
 
+% - output market clearing - double counting
+% jkl      = jkl+1; f(jkl,1) = yt - ct + kapppar*vt;
 
 % -----------------------------------
 % Define the vector of controls, y, and states, x; and names_
 % -----------------------------------
 
-x = [At];
-y = [et ct wt Psit lambdat stoch_betat yt lt xt ut ft Upsilont Jt vt mt qt taut w_firmt];
-xp = [Atp];
-yp = [etp ctp wtp Psitp lambdatp stoch_betatp ytp ltp xtp utp ftp Upsilontp Jtp vtp mtp qtp tautp w_firmtp];
+x = [et At];
+y = [ct wt Psit lambdat stoch_betat yt lt xt ut ft Upsilont Jt vt mt qt];
+xp = [etp Atp];
+yp = [ctp wtp Psitp lambdatp stoch_betatp ytp ltp xtp utp ftp Upsilontp Jtp vtp mtp qtp];
 
-x_ = strvcat('At');
-y_ = strvcat('et','ct', 'wt', 'Psit', 'lambdat', 'stoch_betat', 'yt', 'lt', 'xt', 'ut', 'ft', 'Upsilont', 'Jt', 'vt', 'mt', 'qt', 'taut','w_firmt');
+x_ = strvcat('et','At');
+y_ = strvcat('ct', 'wt', 'Psit', 'lambdat', 'stoch_betat', 'yt', 'lt', 'xt', 'ut', 'ft', 'Upsilont', 'Jt', 'vt', 'mt', 'qt');
 
 paramsym = [zetapar Apar rhopar betapar nupar etapar pipar xipar chipar kappapar sigmaApar]; % parameters
 

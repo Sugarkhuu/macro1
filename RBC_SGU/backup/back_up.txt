@@ -1,0 +1,187 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{mathpazo}
+\usepackage{domitian}
+%\usepackage[T1]{fontenc}
+%\let\oldstylenums\oldstyle
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{misccorr}
+\usepackage{hyperref}
+\usepackage{lscape}
+\usepackage{tocloft}
+\usepackage{titling}
+\usepackage{minted}
+\usepackage{pdfpages}
+\usepackage{comment}
+\usepackage[toc,page]{appendix}
+\onehalfspacing
+\usepackage[left=2cm,right=2cm,
+    top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{comment}
+%\usepackage{verbatim}
+\usepackage{amssymb}
+%\usepackage{booktabs}
+%\usepackage{array}
+%\usepackage{graphicx}
+%\usepackage{relsize}
+%\usepackage{tikz}
+%\usetikzlibrary{patterns}
+\usepackage{graphicx,txfonts}
+%\usepackage{mathtools}
+\usepackage[toc,page]{appendix}
+\usepackage{listings} % R code
+\usepackage{color}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.55}
+\definecolor{electricgreen}{rgb}{0.0, 1.0, 0.0}
+\definecolor{white}{rgb}{1.0, 1.0, 1.0}
+\definecolor{amber}{rgb}{1.0, 0.75, 0.0}
+\definecolor{brandeisblue}{rgb}{0.0, 0.44, 1.0}
+\definecolor{electricindigo}{rgb}{0.44, 0.0, 1.0}
+\definecolor{carminered}{rgb}{1.0, 0.0, 0.22}
+
+
+
+\vspace{-1 cm}
+\title{Macroeconomics I \\
+Problem Set 5}
+\author{Margarita Kaginian \\Sugarkhuu Radnaa \\ Ömer Erhan Erbiş \\ Taha Direk }
+\date{17 January 2022}
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+    \item 
+    State variables : $A_t, e_t$
+    \item
+    Equilibrium conditions: \\\\
+    1. budget constraint: $c_t = e_t w_t + \Psi_t$  \\
+    2. marginal utility of consumption: $\lambda_t = 1/c_{t}$ \\
+    3. output:  $y_{t} = A_{t} l_{t}$\\
+    4. productivity: $A_{t} - A = \rho(A_{t-1} - A)$ \\
+    5. labor demand: $l_{t}= \frac{y_{t}}{x_{t}}$ \\
+    6. labor market clearing: $l_{t}= e_{t}$ \\
+    7. unemployment: $e_{t}= 1-u_{t}$ \\
+    8. employment dynamic: $e_{t}= (1-\vartheta )e_{t-1}+f_{t-1}u_{t-1}$ \\
+    9. labor firm profit: $\Upsilon_t = x_t + w_t$ \\ 
+    10. labor firm profit: $J_t = \Upsilon_t - (1-\vartheta)E_{t}\{ \, \beta_{t,t+1}, J_{t+1} \}$ \\ 
+    11. wage equation: $w_{t} = \eta x_t - (1-\eta) \pi$ \\
+    12. match: $m_{t}=\chi u_t^\xi v_t^{1-\xi}$ \\
+    13. vacancy fill prob: $q_t = \frac{m_t}{v_t}$ \\
+    14. get employed probability: $f_t = \frac{m_t}{v_t}$\\
+    15. search profit zero condition: $\kappa = q_t E_{t}\{ \, \beta_{t,t+1}, J_{t+1} \}$ \\ 
+    16. stochbetat: $\beta_{t,t+j}= \beta \frac{\lambda_{t+j}}{\lambda_{t}}$\\
+    17. output market clearing - double counting: $y_{t}=c_{t}+ \kappa v_{t}$\\
+    18. firm profit: $\Psi_t = \Upsilon_{t} e_{t} + \kappa v_{t}$\\\\
+    In FOC approximation we use as a consumption Euler equation the marginal utility of consumption: $\lambda_t = 1/c_{t}$. This property can be seen from the solving a household problem: 
+    
+    $$
+    \int_0^1 E_t \Bigg\{ \sum_{j=0}^{\infty}{\beta^j[\log(c_{i, t+j}) - \zeta I(i \in e_{t+j})}] \Bigg\}di
+    $$\\\\
+    s.t. $c_t = e_t w_t + \Psi_t$
+    
+    The Lagrange function then :
+    
+        $$
+   L =  \int_0^1 E_t \Bigg\{ \sum_{j=0}^{\infty}{\beta^j[\log(c_{i, t+j}) - \zeta I(i \in e_{t+j})}] \Bigg\}di - \sum_{j=0}^{\infty}{\lambda_{t+j}*(c_{t+j} - e_t w_t - \Psi_t)}
+    $$
+    
+    We will maximize it by $c_t, c_{t+1}, .. $
+    
+    \item \begin{align*}
+        \bar{A}&=1.0576\\
+        \bar{x}&=\bar{A}\\
+        \bar{w}&= 0.4 \bar{x} + (1- 0.4)1.02\\
+       \bar{\Upsilon}&=\bar{x}-\bar{w} \\
+       \bar{J}&=\frac{\bar{\Upsilon}}{1-(1-0.0265)0.997} \\
+       E_{t}\{ \, \beta_{t,t+1}, J_{t} \}&=0.997 &(!!!) \\ 
+       \bar{q}&= \frac{0.24}{E_{t}\{ \, \beta_{t,t+1}, J_{t+1} \}}\\
+       \bar{f}&= (0.38 \bar{q}^{(0.5-1)})^{1/0.5}\\
+       \bar{e}&=\frac{\bar{f}}{\bar{f}+0.0265}\\
+       \bar{u}&=1-\bar{e}\\
+       \bar{m}&=\bar{f}\bar{u}\\
+       \bar{v}&= \left(\frac{\bar{m}}{0.38 \bar{u}^{0.5}}\right)^{1/(1-0.5)}\\
+       \bar{l}&=\bar{e}\\
+       \bar{y}&=\bar{A}\bar{l}\\
+       \bar{c}&=\bar{y}-0.24^\bar{v}\\
+       \bar{\lambda}&=\frac{1}{\bar{c}}\\
+       \bar{\Psi}&=\bar{\Upsilon}\bar{e}-0.24^\bar{v}
+    \end{align*}
+    \item
+    \item
+hallo    
+    
+\begin{center}
+    \begin{tabular}{ c c c }
+         & Std & Rel. std \\
+        C & 0.6928 & 0.8294 \\
+        U & 5.1291 & 6.1400 \\
+    \end{tabular}
+\end{center}    
+    
+    \item
+
+Since the employment is fully determined by the previous period variables, the initial period impact on employment of productivity shock is zero. Hence output, on impact, changes by the magnitude of productivity (negative 1 percent) times labor (less than 1). Hence, initial drop in output is less than 1 percent as shown in Figure \ref{fig:prod}. Moreover, the unemployment doesn't change at all in the first period. \\
+
+However, starting from the next period, the firm decision will kick in and will push the unemployment up and, hence, worsen the output. It takes four periods for output to bottom out. While productivity always increases after its initial drop, the output and the unemployment will drop for some time before the recovery in productivity eventually lifts them up and put them back to the direction towards their steady state. 
+
+\begin{figure}[h!]
+    \centering
+    \caption{The impulse response of output and unemployment to a contractionary 1 percent productivity shock (upper plot is output)}
+    \includegraphics[width=13cm, height=8cm]{prod_shock.png}
+    \label{fig:prod}
+\end{figure}
+
+
+
+\item
+
+    It is given:    
+        \begin{equation*}
+            w_{t} = \eta x_{t} + (1-\eta)\pi
+        \end{equation*}
+        
+    From previous results, the steady state wage is $1.0350$. Since $\bar{x}=A$, 
+    
+    \begin{equation*}
+        \pi = \frac{\bar{w}-\eta*A}{(1-\eta)}=\frac{1.0350-0.2*1.0576}{(1-0.2)}= 1.02935
+    \end{equation*}
+
+    Since equilibrium steady state wage is unchanged, it should not affect the steady state unemployment (we understand 'average' as the steady state) and any other steady state levels. 
+    Regarding the standard deviation, it significantly increases with the new parameterization. In the old setting, the standard error was on average about 5 percent. However, in the new setting, it increased on average to about 6.6 percent. 
+    
+    When $\eta$ is lower, the nominal wage is less responsive to the real economic developments ($x_{t}$ and, thus, $A_{t}$). Given that the less flexible salary will make firms less profitable for any given negative productivity shock compared to the old setting with higher $eta$, the firm will decrease its vacancy posting (since it has lower profit), thus resulting in higher unemployment than the old setting. The case of the positive productivity shock is symmetric which will decrease unemployment more than the old setting, thus resulting in higher unemployment volatility. 
+    
+    To sum, the real variables need to move more when the nominal variables are rigid to bring the economy to its equilibrium \footnote{The code is in "eta\_labor\_sim.m" file.  We did the dozens of replicaitons using the same file. Ideally we could run 100 or 1000 similar simulations to achieve the average standard deviations.}.
+
+   
+\item
+    
+    We introduce a variable $\tau_{t}$ as instructed \footnote{The codes are in the files "wsub\_labor\_model.m" and "wsub\_labor\_sim.m".}. For this additional variable, we need an additional equation to pin down its dynamic. It should be the case that the unemployment is fixed over time. We can use this property as an additional equation as:
+    
+    \begin{equation*}
+        u_{t+1} = u_{t}
+    \end{equation*}
+    
+    The steady state of $\tau_{t}$ is 0 as given \footnote{One technical issue is regarding the exogeneity of $e_{t}$ that we have applied so far. It is now determined out of the system at its steady state level given the fixed unemployment. Thus, we should move it out of the exogenous state variables. Therefore, the system now has only $A_{t}$ as the exogenous state variable.}. Therefore, the steady state of the model will be unchanged. 
+    
+    \begin{figure}[h!]
+        \centering
+        \caption{The impulse response of output and subsidy to a contractionary 1 percent productivity shock (upper plot is output)}
+        \includegraphics[width=13cm, height=8cm]{subsidy.png}
+        \label{fig:subsidy}
+    \end{figure}
+
+    As shown in Figure \ref{fig:subsidy}. The response of output is less than the original both in the initial period and along the way. Thanks to the subsidy by the government, the firm are able to keep employing its workers so that it can produce higher output in the face of negative productivity shock. \\
+    The subsidy, as percentage of steady state wage, initially jumps to about 0.6 percent. It gradually decreases as productivity improves and firm is able to offer higher wages to its workers so that, if not fully, the part of the assistance from the government to keep its employees hired fully is eliminated (i.e., the firm can pay that part on its own) \footnote{We add another variable $w\_firm_{t}$ and use its definition as the equation. The response of the subsidy is calculated as difference in response between employee's wage and firm's wage (i.e., in line with $subsidy_{t} = w_{t} - w\_firm_{t}$)}. 
+
+\end{enumerate}
+
+\end{document}

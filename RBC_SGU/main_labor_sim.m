@@ -8,7 +8,7 @@
 
 % - housekeeping
 clear all, close all, clc
-
+fontSize = 20;
 % - search path
 thispath_ = cd;
 addpath([thispath_,'\auxfiles\'] )
@@ -63,7 +63,7 @@ paramvals = [zetaparval Aparval rhoparval betaparval nuparval etaparval piparval
 % --------------------------
 % Section 2. run model file and get derivatives
 % --------------------------
-labor_model;
+main_labor_model;
 
 % --------------------------
 % Section 3. Check steady state, and evaluate derivatives at steady state
@@ -108,9 +108,9 @@ for jkl=1:(nx+ny);
     subplot(nrow,ncol,jkl)
     scalepar = yxst(jkl);
     plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
-    title(yx_(jkl,:), 'Interpreter','None')
-    ylabel('percent')
-    xlabel('quarters')
+    title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
+    ylabel('percent', 'FontSize', fontSize)
+    xlabel('quarters', 'FontSize', fontSize)
     axis tight
 end
 
@@ -121,15 +121,17 @@ for i=1:numel(vars);
     subplot(2,1,i)
     scalepar = yxst(jkl);
     plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
-    title(yx_(jkl,:), 'Interpreter','None')
-    ylabel('percent')
-    xlabel('quarters')
+    title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
+    ylabel('percent', 'FontSize', fontSize)
+    xlabel('quarters', 'FontSize', fontSize)
     axis tight
 end
 
-orient landscape
-print -dpdf rbcfig_2021.pdf
+main_data = struct();
+main_data.yx_ = yx_;
+main_data.IRF = IRF;
 
+save main_data.mat main_data;
 % --------------------------------------
 % simulate series
 % --------------------------------------

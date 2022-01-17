@@ -8,7 +8,7 @@
 
 % - housekeeping
 clear all, close all, clc
-fontSize = 20;
+
 % - search path
 thispath_ = cd;
 addpath([thispath_,'\auxfiles\'] )
@@ -22,14 +22,15 @@ zetaparval   = 0;
 rhoparval    = 0.95;
 betaparval   = 0.997;
 nuparval     = 0.0265;
+etaparval    = 0.4;
+piparval     = 1.02; 
 xiparval     = 0.5; 
 chiparval    = 0.38; 
 kappaparval  = 0.24;
 sigmaAparval = 0.5/100;
 Aparval      = 1.0576; % not given Should implement root finding method here!!!
-etaparval    = 0.2;
-piparval     = (1.0350-etaparval*Aparval)/(1-etaparval); % 1.0293
-
+tauparval =0;
+% eparval      = 1-0.054472805385888;
 % ----------------------------
 % Section 2. Compute steady state and implied params
 % ----------------------------
@@ -50,6 +51,9 @@ ybar = Abar*lbar;
 cbar = ybar-kappaparval*vbar;
 lambdabar = 1/cbar;
 Psibar = Upsilonbar*ebar-kappaparval*vbar;
+w_firmbar = wbar;
+% taubar = wbar/w_firmbar-1;
+substbar = wbar - w_firmbar;
 
 %% checks
 % mbar - chiparval*ubar^xiparval*vbar^(1-xiparval)
@@ -57,13 +61,13 @@ Psibar = Upsilonbar*ebar-kappaparval*vbar;
 % cbar-ebar*wbar - Psibar
 
 xstst = [ebar, Abar];
-ystst = [cbar, wbar, Psibar, lambdabar, stoch_betabar, ybar, lbar, xbar, ubar, fbar, Upsilonbar, Jbar, vbar, mbar, qbar];
-paramvals = [zetaparval Aparval rhoparval betaparval nuparval etaparval piparval xiparval chiparval kappaparval sigmaAparval];
+ystst = [cbar, wbar, Psibar, lambdabar, stoch_betabar, ybar, lbar, xbar, ubar, fbar, Upsilonbar, Jbar, vbar, mbar, qbar, w_firmbar, substbar];
+paramvals = [zetaparval Aparval rhoparval betaparval nuparval etaparval piparval xiparval chiparval kappaparval sigmaAparval tauparval];
 
 % --------------------------
 % Section 2. run model file and get derivatives
 % --------------------------
-main_labor_model;
+wsub_labor_model;
 
 % --------------------------
 % Section 3. Check steady state, and evaluate derivatives at steady state
@@ -108,9 +112,9 @@ for jkl=1:(nx+ny);
     subplot(nrow,ncol,jkl)
     scalepar = yxst(jkl);
     plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
-    title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
-    ylabel('percent', 'FontSize', fontSize)
-    xlabel('quarters', 'FontSize', fontSize)
+    title(yx_(jkl,:), 'Interpreter','None')
+    ylabel('percent')
+    xlabel('quarters')
     axis tight
 end
 
@@ -121,30 +125,14 @@ for i=1:numel(vars);
     subplot(2,1,i)
     scalepar = yxst(jkl);
     plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
-    title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
-    ylabel('percent', 'FontSize', fontSize)
-    xlabel('quarters', 'FontSize', fontSize)
+    title(yx_(jkl,:), 'Interpreter','None')
+    ylabel('percent')
+    xlabel('quarters')
     axis tight
 end
 
-% Compare with main baseline
-load main_data.mat;
-
-figure(3)
-for i=1:numel(vars);
-    jkl = find(strcmp(cellstr(yx_),vars{i}));
-    jkl_main = find(strcmp(cellstr(main_data.yx_),vars{i}));
-    subplot(2,1,i)
-    scalepar = yxst(jkl);
-    plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k'); hold on;
-    plot(1:tperiods, main_data.IRF(jkl_main,:)/scalepar*100, 'b*'); hold off;
-    title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
-    ylabel('percent', 'FontSize', fontSize)
-    xlabel('quarters', 'FontSize', fontSize)
-    legend({'Baseline','Current'});
-    axis tight
-end
-
+orient landscape
+print -dpdf rbcfig_2021.pdf
 
 % --------------------------------------
 % simulate series

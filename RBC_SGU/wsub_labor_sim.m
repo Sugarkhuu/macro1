@@ -8,7 +8,7 @@
 
 % - housekeeping
 clear all, close all, clc
-
+fontSize = 20;
 % - search path
 thispath_ = cd;
 addpath([thispath_,'\auxfiles\'] )
@@ -50,17 +50,15 @@ ybar = Abar*lbar;
 cbar = ybar-kappaparval*vbar;
 lambdabar = 1/cbar;
 Psibar = Upsilonbar*ebar-kappaparval*vbar;
+taubar = 0;
 w_firmbar = wbar;
-taubar = wbar/w_firmbar-1;
-substbar = wbar - w_firmbar;
-
 %% checks
 % mbar - chiparval*ubar^xiparval*vbar^(1-xiparval)
 % % vbar = mbar/qbar;
 % cbar-ebar*wbar - Psibar
 
-xstst = [ebar, Abar];
-ystst = [cbar, wbar, Psibar, lambdabar, stoch_betabar, ybar, lbar, xbar, ubar, fbar, Upsilonbar, Jbar, vbar, mbar, qbar, taubar,w_firmbar, substbar];
+xstst = [Abar];
+ystst = [ebar, cbar, wbar, Psibar, lambdabar, stoch_betabar, ybar, lbar, xbar, ubar, fbar, Upsilonbar, Jbar, vbar, mbar, qbar, taubar, w_firmbar];
 paramvals = [zetaparval Aparval rhoparval betaparval nuparval etaparval piparval xiparval chiparval kappaparval sigmaAparval];
 
 % --------------------------
@@ -92,7 +90,7 @@ tperiods = 40;25;
 IRF      = zeros(ny+nx,tperiods);
 
 % x        = [0; sigmaAparval];     % one standard deviation shock
-x        = [0; -0.01];           % one percent shock
+x        = [-0.01];[0; -0.01];           % one percent shock
 
 for t = 1:tperiods
     IRF(:,t) = [gx*x; x];
@@ -111,9 +109,9 @@ for jkl=1:(nx+ny);
     subplot(nrow,ncol,jkl)
     scalepar = yxst(jkl);
     plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
-    title(yx_(jkl,:), 'Interpreter','None')
-    ylabel('percent')
-    xlabel('quarters')
+    title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
+    ylabel('percent', 'FontSize', fontSize)
+    xlabel('quarters', 'FontSize', fontSize)
     axis tight
 end
 
@@ -124,14 +122,30 @@ for i=1:numel(vars);
     subplot(2,1,i)
     scalepar = yxst(jkl);
     plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
-    title(yx_(jkl,:), 'Interpreter','None')
-    ylabel('percent')
-    xlabel('quarters')
+    title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
+    ylabel('percent', 'FontSize', fontSize)
+    xlabel('quarters', 'FontSize', fontSize)
     axis tight
 end
 
-orient landscape
-print -dpdf rbcfig_2021.pdf
+vars = {'yt','wt','w_firmt'};
+subplot(2,1,1)
+jkl = find(strcmp(cellstr(yx_),vars{1}));
+scalepar = yxst(jkl);
+plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
+title(yx_(jkl,:), 'Interpreter','None','FontSize', fontSize)
+ylabel('percent','FontSize', fontSize)
+xlabel('quarters','FontSize', fontSize)
+axis tight
+subplot(2,1,2)
+jkl = find(strcmp(cellstr(yx_),vars{2}));
+jkl_ = find(strcmp(cellstr(yx_),vars{3}));
+scalepar = yxst(jkl);
+plot(1:tperiods, (IRF(jkl,:)-IRF(jkl_,:))/scalepar*100, 'k');
+title('Subsidy (% of steady state wage)', 'Interpreter','None','FontSize', fontSize)
+ylabel('percent','FontSize', fontSize)
+xlabel('quarters','FontSize', fontSize)
+axis tight
 
 % --------------------------------------
 % simulate series
@@ -142,8 +156,8 @@ nburn  = 1000;
 Inno = randn(1,nsimul+nburn);
 x    = zeros(nx,1); 
 YXsimul = zeros(ny+nx, nsimul+nburn);
-eta = [0; sigmaAparval];
-
+eta = [sigmaAparval];[0; sigmaAparval];
+% keyboard
 for jkl = 1:(nsimul+nburn);
     x = hx*x+eta*Inno(1,jkl);
     y = gx*x;
