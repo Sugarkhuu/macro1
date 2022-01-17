@@ -114,6 +114,7 @@ for jkl=1:(nx+ny);
     axis tight
 end
 
+% variables to plot
 vars = {'yt','ut'};
 figure(2)
 for i=1:numel(vars);
@@ -127,11 +128,6 @@ for i=1:numel(vars);
     axis tight
 end
 
-main_data = struct();
-main_data.yx_ = yx_;
-main_data.IRF = IRF;
-
-save main_data.mat main_data;
 % --------------------------------------
 % simulate series
 % --------------------------------------
@@ -173,4 +169,11 @@ info.rnames = strvcat(' ',yx_);
 info.cnames = strvcat('std', 'relstd','ar1', 'corry');
 mprint([stds, stds./stds(ypos) ar1, corrys], info)
 
- 
+% save baseline data in main_data.mat
+main_data = struct();
+main_data.yx_ = yx_;
+main_data.IRF = IRF;
+main_data.YXsimul  = YXsimul';
+main_data.YXfilter = YXfilter;
+
+save main_data.mat main_data;

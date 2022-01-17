@@ -115,6 +115,7 @@ for jkl=1:(nx+ny);
     axis tight
 end
 
+% variables to plot
 vars = {'yt','ut'};
 figure(2)
 for i=1:numel(vars);
@@ -128,15 +129,23 @@ for i=1:numel(vars);
     axis tight
 end
 
+% Compare with main baseline
+load main_data.mat;
+
+figure(3)
 vars = {'yt','wt','w_firmt'};
 subplot(2,1,1)
 jkl = find(strcmp(cellstr(yx_),vars{1}));
+jkl_main = find(strcmp(cellstr(main_data.yx_),vars{1}));
 scalepar = yxst(jkl);
-plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
+plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'b*'); hold on;
+plot(1:tperiods, main_data.IRF(jkl_main,:)/scalepar*100, 'k'); hold off;
 title(yx_(jkl,:), 'Interpreter','None','FontSize', fontSize)
 ylabel('percent','FontSize', fontSize)
 xlabel('quarters','FontSize', fontSize)
+legend({'Current','Baseline'},'FontSize', fontSize);
 axis tight
+
 subplot(2,1,2)
 jkl = find(strcmp(cellstr(yx_),vars{2}));
 jkl_ = find(strcmp(cellstr(yx_),vars{3}));

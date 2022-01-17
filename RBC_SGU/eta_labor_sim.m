@@ -114,6 +114,7 @@ for jkl=1:(nx+ny);
     axis tight
 end
 
+% variables to plot
 vars = {'yt','ut'};
 figure(2)
 for i=1:numel(vars);
@@ -136,12 +137,13 @@ for i=1:numel(vars);
     jkl_main = find(strcmp(cellstr(main_data.yx_),vars{i}));
     subplot(2,1,i)
     scalepar = yxst(jkl);
-    plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k'); hold on;
-    plot(1:tperiods, main_data.IRF(jkl_main,:)/scalepar*100, 'b*'); hold off;
+    plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'b*'); hold on;
+    scalepar = yxst(jkl_main);
+    plot(1:tperiods, main_data.IRF(jkl_main,:)/scalepar*100, 'k'); hold off;
     title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
     ylabel('percent', 'FontSize', fontSize)
     xlabel('quarters', 'FontSize', fontSize)
-    legend({'Baseline','Current'});
+    legend({'Current','Baseline'},'FontSize', fontSize);
     axis tight
 end
 
@@ -187,4 +189,8 @@ info.rnames = strvcat(' ',yx_);
 info.cnames = strvcat('std', 'relstd','ar1', 'corry');
 mprint([stds, stds./stds(ypos) ar1, corrys], info)
 
- 
+ypos = find(strcmp(cellstr(yx_),'yt'));
+upos = find(strcmp(cellstr(yx_),'ut'));
+
+disp(['Std of unfiltered Y: ' num2str(100*std(YXsimul(:,ypos)))]);
+disp(['Std of unfiltered U: ' num2str(100*std(YXsimul(:,upos)))]);
