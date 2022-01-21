@@ -1,7 +1,6 @@
 % ----------------------------------------------------------------------------
-% main_RBC_SGU.m
+% ps_run.m
 % 
-% codes the RBC model in PhD Macro 1.
 % Computes second moments and impulse responses using first-order
 % perturbation.
 % --------------------------------------------------------------------------
@@ -17,53 +16,44 @@ addpath([thispath_,'\auxfiles\'] )
 % Section 1. Set parameters and targets
 % -----------------------------------------
 
-% - set parameters
-zetaparval   = 0;
-rhoparval    = 0.95;
-betaparval   = 0.997;
-nuparval     = 0.0265;
-etaparval    = 0.4;
-piparval     = 1.02; 
-xiparval     = 0.5; 
-chiparval    = 0.38; 
-kappaparval  = 0.24;
-sigmaAparval = 0.5/100;
-Aparval      = 1.0576; % not given Should implement root finding method here!!!
-
+% - set parameters 
+beta   = 0.99;
+gamma  = 0.5;
+alpha  = 1.5;
+PIstar = 1;
+ypar = 1;
+bstar  = ypar/2;
+Rstar  = PIstar/beta;
+sstar  = (1/beta-1)*bstar/Rstar;
+zstar = 0;
 % ----------------------------
 % Section 2. Compute steady state and implied params
 % ----------------------------
-Abar = Aparval;
-xbar = Abar;
-wbar = etaparval*xbar + (1-etaparval)*piparval;
-Upsilonbar = xbar - wbar;
-Jbar = Upsilonbar/(1-(1-nuparval)*betaparval);
-stoch_betabar = betaparval;
-qbar = kappaparval/(stoch_betabar*Jbar);
-fbar = (chiparval*qbar^(xiparval-1))^(1/xiparval); 
-ebar = fbar/(fbar+nuparval);
-ubar = 1 - ebar;
-mbar = fbar*ubar;
-vbar = (mbar/(chiparval*ubar^xiparval))^(1/(1-xiparval));
-lbar = ebar;
-ybar = Abar*lbar;
-cbar = ybar-kappaparval*vbar;
-lambdabar = 1/cbar;
-Psibar = Upsilonbar*ebar-kappaparval*vbar;
+cbar = ypar;
+PIbar = PIstar;
+Pbar = 1;
+Rbar = Rstar;
+sbar = sstar;
+bbar = bstar;
+Bbar = bbar;
+Bbbar = Bbar;
+zbar = zstar;
+taubar = zbar + sbar;
+
 
 %% checks
 % mbar - chiparval*ubar^xiparval*vbar^(1-xiparval)
 % % vbar = mbar/qbar;
 % cbar-ebar*wbar - Psibar
 
-xstst = [ebar, Abar];
-ystst = [cbar, wbar, Psibar, lambdabar, stoch_betabar, ybar, lbar, xbar, ubar, fbar, Upsilonbar, Jbar, vbar, mbar, qbar];
-paramvals = [zetaparval Aparval rhoparval betaparval nuparval etaparval piparval xiparval chiparval kappaparval sigmaAparval];
+xstst = [Pbar, Bbar];
+ystst = [cbar, PIbar, Rbar, sbar, taubar, zbar, Bbbar, bbar];
+paramvals = [beta gamma alpha PIstar Rstar sstar bstar ypar zstar];
 
 % --------------------------
 % Section 2. run model file and get derivatives
 % --------------------------
-main_labor_model;
+ps_mod;
 
 % --------------------------
 % Section 3. Check steady state, and evaluate derivatives at steady state

@@ -1,6 +1,6 @@
 % --------------------------------------------
-% RBC_model.m
-% sets up the RBC model,decentralized version.
+% ps_mod.m
+% sets up the fiscal and monetary model,decentralized version.
 % Compute derivatives symbolically.
 % --------------------------------------------
 
@@ -8,65 +8,49 @@
 % -----------------------------------
 % define symbolic variables
 % -----------------------------------
-syms zetapar Apar rhopar betapar nupar etapar pipar xipar chipar kappapar sigmaApar;            % parameters
-syms ct et wt Psit lambdat stoch_betat yt At lt xt ut ft Upsilont Jt vt mt qt;                  % variables: today 
-syms ctp etp wtp Psitp lambdatp stoch_betatp ytp Atp ltp xtp utp ftp Upsilontp Jtp vtp mtp qtp; % variables: tomorrow 
-
-% -----------------------------------
-% model equations; create function f
-% -----------------------------------
-jkl      = 0;
-% - budget constraint
-jkl      = jkl+1; f(jkl,1) = ct - et*wt - Psit;
-% - marginal utility of consumption
-jkl      = jkl+1; f(jkl,1) = lambdat - 1/ct;
-% - output
-jkl      = jkl+1; f(jkl,1) = yt - At*lt;
-% - productivity process
-jkl      = jkl+1; f(jkl,1) = Atp - Apar - rhopar*(At - Apar);
-% - labor good production
-jkl      = jkl+1; f(jkl,1) = lt - yt/xt;
-% - labor market clearing
-jkl      = jkl+1; f(jkl,1) = lt - et;
-% - unemployment
-jkl      = jkl+1; f(jkl,1) = et - 1 + ut;
-% - employment dynamic
-jkl      = jkl+1; f(jkl,1) = etp - (1-nupar)*et - ft*ut;
-% - labor firm profit
-jkl      = jkl+1; f(jkl,1) = Upsilont - xt + wt;
-% - labor firm value
-jkl      = jkl+1; f(jkl,1) = Jt - Upsilont - (1-nupar)*stoch_betat*Jtp;
-% - wage equation
-jkl      = jkl+1; f(jkl,1) = wt - etapar*xt - (1-etapar)*pipar;
-% - match
-jkl      = jkl+1; f(jkl,1) = mt - chipar*(ut^xipar)*(vt^(1-xipar));
-% - vacancy fill prob.
-jkl      = jkl+1; f(jkl,1) = qt - mt/vt;
-% - get employed prob.
-jkl      = jkl+1; f(jkl,1) = ft - mt/ut;
-% - firm zero profit  cond.
-jkl      = jkl+1; f(jkl,1) = kappapar - qt*stoch_betat*Jtp;
-% - stoch_betat
-jkl      = jkl+1; f(jkl,1) = stoch_betat - betapar*lambdatp/lambdat;
-% - firm profit
-jkl      = jkl+1; f(jkl,1) = Psit - Upsilont*et + kappapar*vt;
-
-% - output market clearing - double counting
-% jkl      = jkl+1; f(jkl,1) = yt - ct + kapppar*vt;
+syms beta gamma alpha PIstar Rstar sstar bstar ypar zstar;     % parameters
+syms ct PIt Pt Rt st taut zt Bt Btb bt;                  % variables: today 
+syms ctp PItp Ptp Rtp stp tautp ztp Btp Btbp btp;         % variables: tomorrow 
 
 % -----------------------------------
 % Define the vector of controls, y, and states, x; and names_
 % -----------------------------------
 
-x = [et At];
-y = [ct wt Psit lambdat stoch_betat yt lt xt ut ft Upsilont Jt vt mt qt];
-xp = [etp Atp];
-yp = [ctp wtp Psitp lambdatp stoch_betatp ytp ltp xtp utp ftp Upsilontp Jtp vtp mtp qtp];
+x = [Pt Bt];
+y = [ct PIt Rt st taut zt Btb bt];
+xp = [Ptp Btp];
+yp = [ctp PItp Rtp stp tautp ztp Btbp btp];
 
-x_ = strvcat('et','At');
-y_ = strvcat('ct', 'wt', 'Psit', 'lambdat', 'stoch_betat', 'yt', 'lt', 'xt', 'ut', 'ft', 'Upsilont', 'Jt', 'vt', 'mt', 'qt');
+x_ = strvcat('Pt','Bt');
+y_ = strvcat('ct', 'PIt', 'Rt', 'st', 'taut', 'zt', 'Btb', 'bt');
 
-paramsym = [zetapar Apar rhopar betapar nupar etapar pipar xipar chipar kappapar sigmaApar]; % parameters
+paramsym = [beta gamma alpha PIstar Rstar sstar bstar ypar zstar]; % parameters
+
+% -----------------------------------
+% model equations; create function f
+% -----------------------------------
+jkl      = 0;
+% - Euler equation
+jkl      = jkl+1; f(jkl,1) = 1/(Pt*Rt) - beta/Ptp;
+% - Inflation
+jkl      = jkl+1; f(jkl,1) = PItp - Ptp/Pt;
+% - Primary surplus
+jkl      = jkl+1; f(jkl,1) = st - taut + zt;
+% - Monetary policy rule
+jkl      = jkl+1; f(jkl,1) = 1/Rt - 1/Rstar - alpha*(1/PIt-1/PIstar);
+% - Fiscal policy rule
+jkl      = jkl+1; f(jkl,1) = stp - sstar - gamma*(1/Rt*Bt/Pt - bstar/Rstar);
+% - 
+jkl      = jkl+1; f(jkl,1) = bt - Bt/Pt;
+% - consumer budget
+jkl      = jkl+1; f(jkl,1) = Pt*ct + Pt*taut + Bt/Rt - Pt*ypar - Pt*zt - Btb;
+% - market clearing
+jkl      = jkl+1; f(jkl,1) = ct - ypar;
+% - Backward p is current period
+jkl      = jkl+1; f(jkl,1) = Btbp - Bt;
+% 
+jkl      = jkl+1; f(jkl,1) = zt - zstar;
+
 
 nx = length(x);
 ny = length(y);
