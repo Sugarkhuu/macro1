@@ -8,48 +8,47 @@
 % -----------------------------------
 % define symbolic variables
 % -----------------------------------
-syms beta gamma alpha PIstar Rstar sstar bstar ypar zstar;     % parameters
-syms ct PIt Pt Rt st taut zt Bt Btb bt;                  % variables: today 
-syms ctp PItp Ptp Rtp stp tautp ztp Btp Btbp btp;         % variables: tomorrow 
+
+var_par = {'beta', 'gamma', 'alpha', 'pi_star', 'R_star', 's_star', 'b_star', 'y_star'};
+
+% Variables
+% today
+var_st  = {'Rt','st'};
+var_ct  = {'ct','pit','bt'};
+% tomorrow 
+var_stp = strcat(var_st, 'p');
+var_ctp = strcat(var_ct, 'p');
 
 % -----------------------------------
 % Define the vector of controls, y, and states, x; and names_
 % -----------------------------------
 
-x = [Pt Bt];
-y = [ct PIt Rt st taut zt Btb bt];
-xp = [Ptp Btp];
-yp = [ctp PItp Rtp stp tautp ztp Btbp btp];
+% syms
+cellfun(@syms,{var_par, var_st,var_ct,var_stp,var_ctp});
 
-x_ = strvcat('Pt','Bt');
-y_ = strvcat('ct', 'PIt', 'Rt', 'st', 'taut', 'zt', 'Btb', 'bt');
+x  = [cellfun(@eval,var_st)];
+y  = [cellfun(@eval,var_ct)];
+xp = [cellfun(@eval,var_stp)];
+yp = [cellfun(@eval,var_ctp)];
 
-paramsym = [beta gamma alpha PIstar Rstar sstar bstar ypar zstar]; % parameters
+x_ = strvcat(string((var_st)));
+y_ = strvcat(string((var_ct)));
+paramsym = [cellfun(@eval,var_par)]; % parameters
 
 % -----------------------------------
 % model equations; create function f
 % -----------------------------------
 jkl      = 0;
 % - Euler equation
-jkl      = jkl+1; f(jkl,1) = 1/(Pt*Rt) - beta/Ptp;
-% - Inflation
-jkl      = jkl+1; f(jkl,1) = PItp - Ptp/Pt;
-% - Primary surplus
-jkl      = jkl+1; f(jkl,1) = st - taut + zt;
+jkl      = jkl+1; f(jkl,1) = 1/Rt - beta/pitp;
 % - Monetary policy rule
-jkl      = jkl+1; f(jkl,1) = 1/Rt - 1/Rstar - alpha*(1/PIt-1/PIstar);
+jkl      = jkl+1; f(jkl,1) = 1/Rt - 1/R_star - alpha*(1/pit-1/pi_star);
 % - Fiscal policy rule
-jkl      = jkl+1; f(jkl,1) = stp - sstar - gamma*(1/Rt*Bt/Pt - bstar/Rstar);
-% - 
-jkl      = jkl+1; f(jkl,1) = bt - Bt/Pt;
+jkl      = jkl+1; f(jkl,1) = stp - s_star - gamma*(1/Rt*bt - b_star/R_star);
 % - consumer budget
-jkl      = jkl+1; f(jkl,1) = Pt*ct + Pt*taut + Bt/Rt - Pt*ypar - Pt*zt - Btb;
+jkl      = jkl+1; f(jkl,1) = ctp + stp + btp/Rtp - y_star - bt/pitp;
 % - market clearing
-jkl      = jkl+1; f(jkl,1) = ct - ypar;
-% - Backward p is current period
-jkl      = jkl+1; f(jkl,1) = Btbp - Bt;
-% 
-jkl      = jkl+1; f(jkl,1) = zt - zstar;
+jkl      = jkl+1; f(jkl,1) = ct - y_star;
 
 
 nx = length(x);

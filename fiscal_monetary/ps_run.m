@@ -20,35 +20,24 @@ addpath([thispath_,'\auxfiles\'] )
 beta   = 0.99;
 gamma  = 0.5;
 alpha  = 1.5;
-PIstar = 1;
-ypar = 1;
-bstar  = ypar/2;
-Rstar  = PIstar/beta;
-sstar  = (1/beta-1)*bstar/Rstar;
-zstar = 0;
+pi_star = 1;
+y_star = 1;
+b_star  = y_star/2;
+R_star  = pi_star/beta;
+s_star  = (1/beta-1)*b_star/R_star;
+
 % ----------------------------
 % Section 2. Compute steady state and implied params
 % ----------------------------
-cbar = ypar;
-PIbar = PIstar;
-Pbar = 1;
-Rbar = Rstar;
-sbar = sstar;
-bbar = bstar;
-Bbar = bbar;
-Bbbar = Bbar;
-zbar = zstar;
-taubar = zbar + sbar;
+ctbar = y_star;
+pitbar = pi_star;
+Rtbar = R_star;
+stbar = s_star;
+btbar = b_star;
 
-
-%% checks
-% mbar - chiparval*ubar^xiparval*vbar^(1-xiparval)
-% % vbar = mbar/qbar;
-% cbar-ebar*wbar - Psibar
-
-xstst = [Pbar, Bbar];
-ystst = [cbar, PIbar, Rbar, sbar, taubar, zbar, Bbbar, bbar];
-paramvals = [beta gamma alpha PIstar Rstar sstar bstar ypar zstar];
+xstst = [Rtbar, stbar];
+ystst = [ctbar, pitbar, btbar];
+paramvals = [beta gamma alpha pi_star R_star s_star b_star y_star];
 
 % --------------------------
 % Section 2. run model file and get derivatives
