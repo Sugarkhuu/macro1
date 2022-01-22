@@ -9,12 +9,12 @@
 % define symbolic variables
 % -----------------------------------
 
-var_par = {'beta', 'gamma', 'alpha', 'pi_star', 'R_star', 's_star', 'b_star', 'y_star'};
+var_par = {'beta', 'gamma', 'alpha', 'pi_star', 'R_star', 's_star', 'b_star'};
 
 % Variables
 % today
 var_st  = {'Rt','st'};
-var_ct  = {'ct','pit','bt'};
+var_ct  = {'pit','bt'};
 % tomorrow 
 var_stp = strcat(var_st, 'p');
 var_ctp = strcat(var_ct, 'p');
@@ -46,9 +46,7 @@ jkl      = jkl+1; f(jkl,1) = 1/Rt - 1/R_star - alpha*(1/pit-1/pi_star);
 % - Fiscal policy rule
 jkl      = jkl+1; f(jkl,1) = stp - s_star - gamma*(1/Rt*bt - b_star/R_star);
 % - consumer budget
-jkl      = jkl+1; f(jkl,1) = ctp + stp + btp/Rtp - y_star - bt/pitp;
-% - market clearing
-jkl      = jkl+1; f(jkl,1) = ct - y_star;
+jkl      = jkl+1; f(jkl,1) = stp + btp/Rtp - bt/pitp;
 
 
 nx = length(x);

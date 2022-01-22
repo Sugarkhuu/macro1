@@ -21,23 +21,21 @@ beta   = 0.99;
 gamma  = 0.5;
 alpha  = 1.5;
 pi_star = 1;
-y_star = 1;
-b_star  = y_star/2;
+b_star  = 1/2;
 R_star  = pi_star/beta;
 s_star  = (1/beta-1)*b_star/R_star;
 
 % ----------------------------
 % Section 2. Compute steady state and implied params
 % ----------------------------
-ctbar = y_star;
 pitbar = pi_star;
 Rtbar = R_star;
 stbar = s_star;
 btbar = b_star;
 
 xstst = [Rtbar, stbar];
-ystst = [ctbar, pitbar, btbar];
-paramvals = [beta gamma alpha pi_star R_star s_star b_star y_star];
+ystst = [pitbar, btbar];
+paramvals = [beta gamma alpha pi_star R_star s_star b_star];
 
 % --------------------------
 % Section 2. run model file and get derivatives
