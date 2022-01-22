@@ -25,6 +25,9 @@ b_star  = 1/2;
 R_star  = pi_star/beta;
 s_star  = (1/beta-1)*b_star/R_star;
 
+shock_F = 0.01;
+shock_M = 0;-0.01;
+
 % ----------------------------
 % Section 2. Compute steady state and implied params
 % ----------------------------
@@ -33,8 +36,8 @@ Rtbar = R_star;
 stbar = s_star;
 btbar = b_star;
 
-xstst = [Rtbar, stbar];
-ystst = [pitbar, btbar];
+xstst = [stbar, Rtbar];
+ystst = [btbar, pitbar, btbar, Rtbar];
 paramvals = [beta gamma alpha pi_star R_star s_star b_star];
 
 % --------------------------
@@ -58,7 +61,7 @@ nfyp = eval(subs(fyp,[x,xp,y,yp,paramsym],[xstst,xstst,ystst,ystst, paramvals]))
 % solve first-order approximation
 % -------------------------
 [gx,hx] = gx_hx(nfy,nfx,nfyp,nfxp);
-
+    
 % -------------------------
 % impulse response to TFP shock
 % -------------------------
@@ -66,7 +69,7 @@ tperiods = 40;25;
 IRF      = zeros(ny+nx,tperiods);
 
 % x        = [0; sigmaAparval];     % one standard deviation shock
-x        = [0; -0.01];           % one percent shock
+x        = [shock_F; shock_M];           % one percent shock
 
 for t = 1:tperiods
     IRF(:,t) = [gx*x; x];
@@ -77,8 +80,8 @@ end
 yxst = [ystst,xstst]';
 yx_  = strvcat(y_,x_);
 
-nrow = 4; 
-ncol = 5;
+nrow = floor((length(y)+length(x))/3); 
+ncol = 3;
 
 figure(1)
 for jkl=1:(nx+ny);
@@ -91,19 +94,19 @@ for jkl=1:(nx+ny);
     axis tight
 end
 
-% variables to plot
-vars = {'yt','ut'};
-figure(2)
-for i=1:numel(vars);
-    jkl = find(strcmp(cellstr(yx_),vars{i}));
-    subplot(2,1,i)
-    scalepar = yxst(jkl);
-    plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
-    title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
-    ylabel('percent', 'FontSize', fontSize)
-    xlabel('quarters', 'FontSize', fontSize)
-    axis tight
-end
+% % variables to plot
+% vars = {'yt','ut'};
+% figure(2)
+% for i=1:numel(vars);
+%     jkl = find(strcmp(cellstr(yx_),vars{i}));
+%     subplot(2,1,i)
+%     scalepar = yxst(jkl);
+%     plot(1:tperiods, IRF(jkl,:)/scalepar*100, 'k');
+%     title(yx_(jkl,:), 'Interpreter','None', 'FontSize', fontSize)
+%     ylabel('percent', 'FontSize', fontSize)
+%     xlabel('quarters', 'FontSize', fontSize)
+%     axis tight
+% end
 
 % --------------------------------------
 % simulate series
@@ -114,7 +117,7 @@ nburn  = 1000;
 Inno = randn(1,nsimul+nburn);
 x    = zeros(nx,1); 
 YXsimul = zeros(ny+nx, nsimul+nburn);
-eta = [0; sigmaAparval];
+eta = [shock_F; shock_M]; %[0; sigmaAparval];
 
 for jkl = 1:(nsimul+nburn);
     x = hx*x+eta*Inno(1,jkl);
@@ -130,7 +133,7 @@ YXsimul = YXsimul(:, nburn+1:end);
 YXfilter = yd*100;
 
 % - std deviations
-ypos = find(strcmp(cellstr(yx_),'yt'));6;
+ypos = find(strcmp(cellstr(yx_),'Rt'));6;
 VCOV = cov(YXfilter);
 stds = sqrt(diag(VCOV));                % standard deviations
 CORR = corr(YXfilter);
@@ -146,11 +149,11 @@ info.rnames = strvcat(' ',yx_);
 info.cnames = strvcat('std', 'relstd','ar1', 'corry');
 mprint([stds, stds./stds(ypos) ar1, corrys], info)
 
-% save baseline data in main_data.mat
-main_data = struct();
-main_data.yx_ = yx_;
-main_data.IRF = IRF;
-main_data.YXsimul  = YXsimul';
-main_data.YXfilter = YXfilter;
+% % save baseline data in main_data.mat
+% main_data = struct();
+% main_data.yx_ = yx_;
+% main_data.IRF = IRF;
+% main_data.YXsimul  = YXsimul';
+% main_data.YXfilter = YXfilter;
 
-save main_data.mat main_data;
+% save main_data.mat main_data;

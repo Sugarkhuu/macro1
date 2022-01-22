@@ -13,8 +13,8 @@ var_par = {'beta', 'gamma', 'alpha', 'pi_star', 'R_star', 's_star', 'b_star'};
 
 % Variables
 % today
-var_st  = {'Rt','st'};
-var_ct  = {'pit','bt'};
+var_st  = {'st','Rt'}; %{'bt','pit'};
+var_ct  = {'bt','pit','btb','Rtb'}; %{'st','Rt', 'btb','Rtb'};
 % tomorrow 
 var_stp = strcat(var_st, 'p');
 var_ctp = strcat(var_ct, 'p');
@@ -44,9 +44,13 @@ jkl      = jkl+1; f(jkl,1) = 1/Rt - beta/pitp;
 % - Monetary policy rule
 jkl      = jkl+1; f(jkl,1) = 1/Rt - 1/R_star - alpha*(1/pit-1/pi_star);
 % - Fiscal policy rule
-jkl      = jkl+1; f(jkl,1) = stp - s_star - gamma*(1/Rt*bt - b_star/R_star);
-% - consumer budget
-jkl      = jkl+1; f(jkl,1) = stp + btp/Rtp - bt/pitp;
+jkl      = jkl+1; f(jkl,1) = st - s_star - gamma*(btb/Rtb - b_star/R_star);
+% - Budget
+jkl      = jkl+1; f(jkl,1) = st + bt/Rt - btb/pit;
+% - identity
+jkl      = jkl+1; f(jkl,1) = btbp - bt;
+% - identity
+jkl      = jkl+1; f(jkl,1) = Rtbp - Rt;
 
 
 nx = length(x);
