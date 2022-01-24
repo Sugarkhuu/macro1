@@ -45,7 +45,7 @@ jkl      = jkl+1; f(jkl,1) = 1/Rt - beta/pitp;
 jkl      = jkl+1; f(jkl,1) = 1/Rt - 1/R_star - alpha*(1/pit-1/pi_star);
 % - Fiscal policy rule
 jkl      = jkl+1; f(jkl,1) = st - s_star - gamma*(btb/Rtb - b_star/R_star);
-% - Budget
+% - Budget constraint
 jkl      = jkl+1; f(jkl,1) = st + bt/Rt - btb/pit;
 % - identity
 jkl      = jkl+1; f(jkl,1) = btbp - bt;
