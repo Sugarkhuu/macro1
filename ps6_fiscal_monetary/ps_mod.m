@@ -9,12 +9,12 @@
 % define symbolic variables
 % -----------------------------------
 
-var_par = {'beta', 'gamma', 'alpha', 'pi_star', 'R_star', 's_star', 'b_star'};
+var_par = {'beta', 'gamma', 'alpha', 'pi_star', 'R_star', 's_star', 'b_star', 'rho_e','epsilon_par'};
 
 % Variables
 % today
-var_st  = {'st','Rt'}; %{'bt','pit'};
-var_ct  = {'bt','pit','btb','Rtb'}; %{'st','Rt', 'btb','Rtb'};
+var_st  = {'bt','st'};
+var_ct  = {'Rtb','Rt','btb','pit'};
 % tomorrow 
 var_stp = strcat(var_st, 'p');
 var_ctp = strcat(var_ct, 'p');
@@ -42,7 +42,8 @@ jkl      = 0;
 % - Euler equation
 jkl      = jkl+1; f(jkl,1) = 1/Rt - beta/pitp;
 % - Monetary policy rule
-jkl      = jkl+1; f(jkl,1) = 1/Rt - 1/R_star - alpha*(1/pit-1/pi_star);
+% jkl      = jkl+1; f(jkl,1) = 1/Rt - 1/R_star - alpha*(1/pit-1/pi_star); % - epsilon_Mt
+jkl      = jkl+1; f(jkl,1) = 1/Rt - 1/R_star - alpha*(1/pit-1/pi_star); % - epsilon_Mt
 % - Fiscal policy rule
 jkl      = jkl+1; f(jkl,1) = st - s_star - gamma*(btb/Rtb - b_star/R_star);
 % - Budget constraint
@@ -51,6 +52,14 @@ jkl      = jkl+1; f(jkl,1) = st + bt/Rt - btb/pit;
 jkl      = jkl+1; f(jkl,1) = btbp - bt;
 % - identity
 jkl      = jkl+1; f(jkl,1) = Rtbp - Rt;
+% - identity
+% jkl      = jkl+1; f(jkl,1) = pitbp - pit;
+% - identity
+% jkl      = jkl+1; f(jkl,1) = epsilon_Mtp - epsilon_par - rho_e * (epsilon_Mt - epsilon_par);
+% - identity
+% jkl      = jkl+1; f(jkl,1) = bt - Bt/pt;
+% - identity
+% jkl      = jkl+1; f(jkl,1) = pitp - ptp/pt;
 
 
 nx = length(x);

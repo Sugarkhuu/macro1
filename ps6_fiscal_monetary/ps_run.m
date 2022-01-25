@@ -24,8 +24,9 @@ pi_star = 1;
 b_star  = 1/2;
 R_star  = pi_star/beta;
 s_star  = (1/beta-1)*b_star/R_star;
+p_star = 1;
 
-shock_F = 0.01;
+shock_F = 0.01;0.01;
 shock_M = 0;-0.01;
 
 % ----------------------------
@@ -35,10 +36,14 @@ pitbar = pi_star;
 Rtbar = R_star;
 stbar = s_star;
 btbar = b_star;
+ptbar = p_star;
+Btbar = btbar*ptbar;
+rho_eval = 0;
+epsilon_par = 0;
 
-xstst = [stbar, Rtbar];
-ystst = [btbar, pitbar, btbar, Rtbar];
-paramvals = [beta gamma alpha pi_star R_star s_star b_star];
+xstst = [btbar,stbar]; 
+ystst = [Rtbar, Rtbar, btbar, pitbar];
+paramvals = [beta gamma alpha pi_star R_star s_star b_star rho_eval epsilon_par];
 
 % --------------------------
 % Section 2. run model file and get derivatives
@@ -69,7 +74,7 @@ tperiods = 40;25;
 IRF      = zeros(ny+nx,tperiods);
 
 % x        = [0; sigmaAparval];     % one standard deviation shock
-x        = [shock_F; shock_M];           % one percent shock
+x        = [shock_F;shock_M]; %; ; shock_M          % one percent shock
 
 for t = 1:tperiods
     IRF(:,t) = [gx*x; x];
@@ -80,7 +85,7 @@ end
 yxst = [ystst,xstst]';
 yx_  = strvcat(y_,x_);
 
-nrow = floor((length(y)+length(x))/3); 
+nrow = ceil((nx+ny)/3); 
 ncol = 3;
 
 figure(1)
