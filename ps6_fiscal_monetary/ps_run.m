@@ -17,33 +17,33 @@ addpath([thispath_,'\auxfiles\'] )
 % -----------------------------------------
 
 % - set parameters 
-beta   = 0.99;
-gamma  = 0.5;
-alpha  = 1.5;
-pi_star = 1;
-b_star  = 1/2;
-R_star  = pi_star/beta;
-s_star  = (1/beta-1)*b_star/R_star;
-p_star = 1;
+betaparval   = 0.99;
+gammaparval  = 0.5;
+alphaparval  = 1.5;
+pi_starparval = 1;
+b_starparval  = 1/2;
+R_starparval  = pi_starparval/betaparval;
+s_starparval  = (1/betaparval-1)*b_starparval/R_starparval;
+% p_starparval = 1;
+rho_eparval = 0.9;
+eparparval = 0;
 
-shock_F = 0.01;0.01;
-shock_M = 0;-0.01;
-
+shock_aux = 0;
+shock_F   = 0.01;0.01;
+shock_M   = 0;0.01;
 % ----------------------------
 % Section 2. Compute steady state and implied params
 % ----------------------------
-pitbar = pi_star;
-Rtbar = R_star;
-stbar = s_star;
-btbar = b_star;
-ptbar = p_star;
-Btbar = btbar*ptbar;
-rho_eval = 0;
-epsilon_par = 0;
+pitbar = pi_starparval;
+Rtbar = R_starparval;
+stbar = s_starparval;
+btbar = b_starparval;
+% ptbar = p_starparval;
+% Btbar = btbar*ptbar;
 
-xstst = [btbar,stbar]; 
-ystst = [Rtbar, Rtbar, btbar, pitbar];
-paramvals = [beta gamma alpha pi_star R_star s_star b_star rho_eval epsilon_par];
+xstst = [Rtbar,stbar,eparparval]; 
+ystst = [btbar,btbar,pitbar,Rtbar];
+paramvals = [betaparval gammaparval alphaparval pi_starparval R_starparval s_starparval b_starparval rho_eparval eparparval];
 
 % --------------------------
 % Section 2. run model file and get derivatives
@@ -70,11 +70,11 @@ nfyp = eval(subs(fyp,[x,xp,y,yp,paramsym],[xstst,xstst,ystst,ystst, paramvals]))
 % -------------------------
 % impulse response to TFP shock
 % -------------------------
-tperiods = 40;25;
+tperiods = 25;
 IRF      = zeros(ny+nx,tperiods);
 
 % x        = [0; sigmaAparval];     % one standard deviation shock
-x        = [shock_F;shock_M]; %; ; shock_M          % one percent shock
+x        = [shock_aux;shock_F;shock_M]; %; ; shock_M          % one percent shock
 
 for t = 1:tperiods
     IRF(:,t) = [gx*x; x];
@@ -122,7 +122,7 @@ nburn  = 1000;
 Inno = randn(1,nsimul+nburn);
 x    = zeros(nx,1); 
 YXsimul = zeros(ny+nx, nsimul+nburn);
-eta = [shock_F; shock_M]; %[0; sigmaAparval];
+eta = [shock_aux;shock_F;shock_M]; %[0; sigmaAparval];
 
 for jkl = 1:(nsimul+nburn);
     x = hx*x+eta*Inno(1,jkl);
